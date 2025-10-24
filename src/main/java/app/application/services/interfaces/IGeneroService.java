@@ -11,4 +11,6 @@ public interface IGeneroService {
     Genero findById(Long id);
     Genero save(Genero genero);
     void deleteById(Long id);
+
+    Genero create(String nombre);
 }

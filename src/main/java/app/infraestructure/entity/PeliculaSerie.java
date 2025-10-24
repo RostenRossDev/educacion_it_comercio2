@@ -20,7 +20,7 @@ public class PeliculaSerie {
     @Column(name = "fecha_creacion")
     LocalDate fechaCreacion;
 
-    Byte calificacion;
+    Short calificacion;
 
     @OneToMany(mappedBy = "", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Personaje> personajesAsiciados;

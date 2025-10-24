@@ -38,4 +38,11 @@ public class GeneroServiceImpl implements IGeneroService {
     public void deleteById(Long id) {
         generoRepository.deleteById(id);
     }
+
+    @Override
+    public Genero create(String nombre) {
+        Genero newGender = new Genero();
+        newGender.setNombre(nombre);
+        return generoRepository.save(newGender);
+    }
 }

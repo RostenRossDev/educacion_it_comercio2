@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonajeServiceImpl implements IPersonajeService {
@@ -71,6 +72,21 @@ public class PersonajeServiceImpl implements IPersonajeService {
         newPersonaje.setHistoria(personajeDto.getHistoria());
         newPersonaje.setNombre(personajeDto.getNombre());
         return personajeRepository.save(newPersonaje);
+    }
+
+    @Override
+    public List<PersonajeDominio> findEdadBetween(Short edadDesde, Short edadHasta) {
+        List<Personaje> personajesEntity = personajeRepository.findAll();
+        List<PersonajeDominio> result;
+
+        //recorrer personajes entities y filtrar por edad
+        return personajesEntity.stream()
+                .filter(personaje -> personaje.getEdad() >= edadDesde && personaje.getEdad() <= edadHasta)
+                .map(entidad -> {
+                  PeliculaSerie peliculaSerieDom =  PeliculaSerieServiceImpl.getPeliculaSeries(List.of(entidad.getPeliculaSerie())).getFirst();
+                    return new PersonajeDominio(entidad.getEdad(), entidad.getPeso(), entidad.getHistoria(), peliculaSerieDom);
+                })
+                .collect(Collectors.toUnmodifiableList());
     }
 
 }

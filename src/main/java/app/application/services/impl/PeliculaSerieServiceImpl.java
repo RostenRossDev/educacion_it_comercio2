@@ -6,12 +6,15 @@ import app.dominio.dto.PeliculaSerieDto;
 import app.infraestructure.entity.PeliculaSerie;
 import app.infraestructure.entity.Personaje;
 import app.infraestructure.repository.PeliculaSerieRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @Service
 public class PeliculaSerieServiceImpl implements IPeliculaSerieService {
 
@@ -81,6 +84,45 @@ public class PeliculaSerieServiceImpl implements IPeliculaSerieService {
         return peliculaSerieRepository.save(newPeliculaSerie);
     }
 
+    @Override
+    public List<app.dominio.PeliculaSerie> fromAndTo(LocalDate fechaDesde, LocalDate fechaHasta) {
+        List<PeliculaSerie> filtrado = peliculaSerieRepository.findByFechaCreacionBetween(fechaDesde, fechaHasta);
+        return getPeliculaSeries(filtrado);
+    }
+
+
+
+    @Override
+    public List<app.dominio.PeliculaSerie> calificacionBetween(Short calificacionDesde, Short calificacionHasta) {
+        List<PeliculaSerie> filtrado = peliculaSerieRepository.findByCalificacionGreaterThanAndLessThan(calificacionDesde, calificacionHasta);
+        return getPeliculaSeries(filtrado);
+    }
+
+    @Override
+    public app.dominio.PeliculaSerie update(PeliculaSerieDto dto, Long id) throws Exception {
+        PeliculaSerie peliculaSerie = peliculaSerieRepository.findById(id).orElse(null);
+        log.info("Informacion original de la pelicula: " + peliculaSerie);
+        if (peliculaSerie != null){
+
+            if (dto.getTitulo() != null && !dto.getTitulo().isEmpty())
+                peliculaSerie.setTitulo(dto.getTitulo());
+
+            if (dto.getCalificacion() != null && dto.getCalificacion() < 5 && dto.getCalificacion() > 0)
+                peliculaSerie.setCalificacion(dto.getCalificacion());
+
+            if (dto.getFechaCreacion() != null && dto.getFechaCreacion().isBefore(LocalDate.now()))
+                peliculaSerie.setFechaCreacion(dto.getFechaCreacion());
+
+            log.info("Informacion nueva de la pelicula: " + peliculaSerie);
+
+            peliculaSerie = peliculaSerieRepository.save(peliculaSerie);
+
+            return null;
+        }
+
+        throw new Exception("No existe la pelicula");
+    }
+
 
     // Metodos Privados
 
@@ -100,5 +142,25 @@ public class PeliculaSerieServiceImpl implements IPeliculaSerieService {
     private List<PersonajeDominio> getPersonajesDomList(   List <Personaje> personajes) {
         List<PersonajeDominio> personajesDom = getPersonajesDom(personajes);
         return personajesDom;
+    }
+
+    public static List<app.dominio.PeliculaSerie> getPeliculaSeries(List<PeliculaSerie> filtrado) {
+        List<app.dominio.PeliculaSerie> result = new ArrayList<>();
+        filtrado.forEach(pelicula -> {
+
+            List<PersonajeDominio> personaesDom = new ArrayList<>();
+            pelicula.getPersonajesAsiciados().forEach(personaje -> {
+                //convertir la entidad persoanje a dominio
+                PersonajeDominio personajeDom = new PersonajeDominio(personaje.getEdad(), personaje.getPeso(), personaje.getHistoria(), null);
+                //agregar el dominio personaje a la lista de personajes
+                personaesDom.add(personajeDom);
+            });
+
+            //convertir la entidad pelicula a dominio
+            app.dominio.PeliculaSerie peliDom = new app.dominio.PeliculaSerie(pelicula.getTitulo(), pelicula.getFechaCreacion(), pelicula.getCalificacion(), personaesDom);
+            //agregar el dominio a la lista final (lista de peliculas y series)
+            result.add(peliDom);
+        });
+        return result;
     }
 }

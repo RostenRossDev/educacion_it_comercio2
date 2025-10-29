@@ -38,4 +38,10 @@ public class PersonajeController {
     public ResponseEntity<?> create(@RequestBody PersonajeDto personajeDto){
         return ResponseEntity.ok(personajeService.create(personajeDto));
     }
+
+    @GetMapping("/edad")
+    public ResponseEntity<?> findAllByEdad(@RequestParam(name = "desde") Short edadDesde, @RequestParam(name = "hasta") Short edadHasta){
+        return ResponseEntity.ok(personajeService.findEdadBetween(edadDesde, edadHasta));
+    }
+
 }

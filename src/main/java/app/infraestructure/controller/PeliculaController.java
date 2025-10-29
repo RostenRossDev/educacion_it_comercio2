@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/pelicula-serie")
 public class PeliculaController {
@@ -29,10 +31,30 @@ public class PeliculaController {
         return ResponseEntity.ok(peliculaSerieService.finbAllByGender(genero));
     }
 
-
     //Crear Perlicula Serie
     @PostMapping
     public ResponseEntity<?> create(@RequestBody PeliculaSerieDto peliculaSerieDto){
         return ResponseEntity.ok(peliculaSerieService.create(peliculaSerieDto));
+    }
+
+    @GetMapping("/películas/fechas")
+    public ResponseEntity<?> fromAndTo(@RequestParam(name = "desde")LocalDate fechaDesde,
+                                       @RequestParam(name = "hasta") LocalDate fechaHasta){
+
+        return ResponseEntity.ok(peliculaSerieService.fromAndTo(fechaDesde, fechaHasta));
+    }
+
+
+    @GetMapping("/películas/calificacion")
+    public ResponseEntity<?> byCalificacion(@RequestParam(name = "desde")Short calificacionDesde,
+                                       @RequestParam(name = "hasta") Short calificacionHasta){
+
+        return ResponseEntity.ok(peliculaSerieService.calificacionBetween(calificacionDesde, calificacionHasta));
+    }
+
+
+    @PutMapping("/películas/{id}")
+    public ResponseEntity<?> update(@RequestBody PeliculaSerieDto peliculaSerieDto, @PathVariable(name = "id") Long peliculaSerieId) throws Exception {
+        return ResponseEntity.ok(peliculaSerieService.update(peliculaSerieDto, peliculaSerieId));
     }
 }

@@ -8,6 +8,7 @@ import app.infraestructure.entity.Personaje;
 import app.infraestructure.repository.PeliculaSerieRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -94,7 +95,7 @@ public class PeliculaSerieServiceImpl implements IPeliculaSerieService {
 
     @Override
     public List<app.dominio.PeliculaSerie> calificacionBetween(Short calificacionDesde, Short calificacionHasta) {
-        List<PeliculaSerie> filtrado = peliculaSerieRepository.findByCalificacionGreaterThanAndLessThan(calificacionDesde, calificacionHasta);
+        List<PeliculaSerie> filtrado = peliculaSerieRepository.findByCalificacionGreaterThanAndCalificacionLessThan(calificacionDesde, calificacionHasta);
         return getPeliculaSeries(filtrado);
     }
 

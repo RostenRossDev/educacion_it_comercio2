@@ -24,6 +24,6 @@ public class Personaje {
     private String historia;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_peliculaSerie_id")
+    @JoinColumn(name = "fk_peliculaserie_id")
     private PeliculaSerie peliculaSerie;
 }

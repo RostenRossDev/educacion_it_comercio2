@@ -13,11 +13,11 @@ public class PeliculaSerieDto {
 
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "El titulo no puede estar vacio.")
     String titulo;
     LocalDate fechaCreacion;
 
-    @Min(1)
-    @Max(5)
+    @Min(value = 1, message = "El valor debe ser positivo mayor a cero.")
+    @Max(value = 5, message = "El valor debe ser menor a 6.")
     Short calificacion;
 }

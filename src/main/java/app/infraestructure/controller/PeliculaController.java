@@ -3,6 +3,7 @@ package app.infraestructure.controller;
 import app.application.services.interfaces.IPeliculaSerieService;
 import app.dominio.dto.PeliculaSerieDto;
 import app.dominio.dto.PersonajeDto;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +55,7 @@ public class PeliculaController {
 
 
     @PutMapping("/películas/{id}")
-    public ResponseEntity<?> update(@RequestBody PeliculaSerieDto peliculaSerieDto, @PathVariable(name = "id") Long peliculaSerieId) throws Exception {
+    public ResponseEntity<?> update(@Valid @RequestBody PeliculaSerieDto peliculaSerieDto, @PathVariable(name = "id") Long peliculaSerieId) throws Exception {
         return ResponseEntity.ok(peliculaSerieService.update(peliculaSerieDto, peliculaSerieId));
     }
 }

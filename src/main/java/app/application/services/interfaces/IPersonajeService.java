@@ -15,4 +15,6 @@ public interface IPersonajeService {
     Personaje create(PersonajeDto personajeDto);
 
     List<PersonajeDominio> findEdadBetween(Short edadDesde, Short edadHasta);
+
+    PersonajeDominio update(PersonajeDominio personaje, Long personajeId);
 }

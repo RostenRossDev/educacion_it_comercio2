@@ -15,5 +15,6 @@ public interface PeliculaSerieRepository extends JpaRepository<PeliculaSerie, Lo
 
     List<PeliculaSerie> findByFechaCreacionBetween(LocalDate desde, LocalDate hasta);
 
-    List<PeliculaSerie> findByCalificacionGreaterThanAndLessThan (Short desde, Short hasta);
+    List<PeliculaSerie> findByCalificacionGreaterThanAndCalificacionLessThan(Short desde, Short hasta);
+//    List<PeliculaSerie> findByCalificacionBetween(Short desde, Short hasta);  //excluye los extremos del rango
 }

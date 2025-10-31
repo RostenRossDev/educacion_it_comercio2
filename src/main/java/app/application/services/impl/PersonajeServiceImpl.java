@@ -4,8 +4,10 @@ import app.application.services.interfaces.IPersonajeService;
 import app.dominio.PeliculaSerie;
 import app.dominio.PersonajeDominio;
 import app.dominio.dto.PersonajeDto;
+import app.dominio.exceptions.NotFoundPersonajeId;
 import app.infraestructure.entity.Personaje;
 import app.infraestructure.repository.PersonajeRepository;
+import org.hibernate.annotations.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +89,24 @@ public class PersonajeServiceImpl implements IPersonajeService {
                     return new PersonajeDominio(entidad.getEdad(), entidad.getPeso(), entidad.getHistoria(), peliculaSerieDom);
                 })
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public PersonajeDominio update(PersonajeDominio personaje, Long personajeId) {
+        Personaje personajesEntity = personajeRepository.findById(personajeId).orElse(null);
+
+        if(personajesEntity == null)
+            throw new NotFoundPersonajeId(personajeId);
+
+        if(personaje.edad() != null)
+            personajesEntity.setEdad(personaje.edad());
+
+        if (personaje.historia() != null)
+            personajesEntity.setHistoria(personaje.historia());
+
+        personajesEntity = personajeRepository.save(personajesEntity);
+
+        return new PersonajeDominio(personajesEntity.getEdad(), personajesEntity.getPeso(), personajesEntity.getHistoria(), null);
     }
 
 }

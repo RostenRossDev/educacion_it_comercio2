@@ -1,6 +1,8 @@
 package app.infraestructure.controller;
 
 import app.application.services.interfaces.IPersonajeService;
+import app.dominio.PersonajeDominio;
+import app.dominio.dto.PeliculaSerieDto;
 import app.dominio.dto.PersonajeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,4 +46,9 @@ public class PersonajeController {
         return ResponseEntity.ok(personajeService.findEdadBetween(edadDesde, edadHasta));
     }
 
+    //actualizar
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@RequestBody PersonajeDominio personaje, @PathVariable(name = "id") Long personajeId) throws Exception {
+        return ResponseEntity.ok(personajeService.update(personaje, personajeId));
+    }
 }
